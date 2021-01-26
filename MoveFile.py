@@ -41,12 +41,16 @@ def rename_file(file):
 	:return:
 	"""
 	pattern1 = ['_', '-']
-	pattern2 = ['1.', '2.', '3.', '4.', 'A.', 'B.', 'C.', 'D.']
+	pattern2 = ['1.', '2.', '3.', '4.', 'A.', 'B.', 'C.', 'D.','a.','b.','c.','d.']
 	number = {
 		'A.': '1.',
 		'B.': '2.',
 		'C.': '3.',
 		'D.': '4.',
+		'a.': '1.',
+		'b.': '2.',
+		'c.': '3.',
+		'd.': '4.',
 	}
 
 	result = file
@@ -54,7 +58,7 @@ def rename_file(file):
 		for pat2 in pattern2:
 			pattern = pat1 + pat2
 			if pattern in file:
-				series = pattern.replace(pat1, '-part')
+				series = pattern.replace(pat1, '-CD')
 				result = file.replace(pattern, series)
 				if pat2 in number:
 					result = result.replace(pat2, number[pat2])
