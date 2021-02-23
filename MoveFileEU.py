@@ -5,9 +5,9 @@
 
 import os
 from shutil import move
+from send2trash import send2trash
 
-
-def move_file(origin, destination, filetype=('.mp4', '.jpg', '.nfo')):
+def move_file_eu(origin, destination,filetype=('.mp4','.nfo')):
 	"""
 	移动文件夹下所有符合要求的文件到另一文件夹
 
@@ -21,12 +21,18 @@ def move_file(origin, destination, filetype=('.mp4', '.jpg', '.nfo')):
 	for foldername, subfolder, filename in os.walk(origin):
 		for file in filename:
 			file_src = os.path.join(foldername, file)
-			file_src = rename_file(file_src)
 			file_des = os.path.join(destination, file_src.split('\\')[-1])
-			if file_src.endswith(filetype):
+			if len(file) >15 and file_src.endswith(filetype):
 				if os.path.exists(file_des):
 					print('Failed {0} is exist'.format(file_src))
 					continue
+				if 'sample' in file_src:
+					send2trash(file_src)
+					print('Removed {}'.format(file_src))
+					continue
+				# if 'fc2' in file_src:
+				# 	continue
+
 				move(file_src, destination)
 				count += 1
 				print('Success {0} is moved to {1}'.format(
@@ -71,12 +77,11 @@ def rename_file(file):
 
 
 if __name__ == '__main__':
-	ori = r'D:\Download\aria2'
-	des = r'D:\Download\QQDownload\Single'
-	file_end = ('.mp4','.jpg','.wmv','.mov','.mkv')
+	ori = r'D:\Download\QQDownload\Single'
+	des = r'D:\Download\QQDownload\EU'
+	file_end = ('.mp4','.jpg','.wmv','.mov')
 
 	if not os.path.exists(des):
 		os.makedirs(des)
 
-	move_file(ori, des, file_end)
-
+	move_file_eu(ori, des ,file_end)
