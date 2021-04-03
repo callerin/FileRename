@@ -3,45 +3,58 @@
 # Created by calle on 2021/1/1
 # Copyright (c) 2021 calle. All rights reserved.
 
-import os
+import os, sys
 from shutil import move
 
+from send2trash import send2trash
 
-def move_file(origin, destination, filetype=('.mp4', '.jpg', '.nfo')):
+
+def move_file(origin: str, destination: str, filetype: tuple = ('.mp4', '.jpg', '.nfo')):
 	"""
 	移动文件夹下所有符合要求的文件到另一文件夹
 
-	Args:
+	args:
 			origin (str):           	待转移文件夹位置
 			destination ([type]):   	目标文件夹
-			filetype (tuple, optional): 文件后缀. Defaults to ('.mp4', '.jpg', '.nfo').
+			filetype (tuple, optional): 文件后缀. defaults to ('.mp4', '.jpg', '.nfo').
 	"""
-
+	
 	count = 0
-	for foldername, subfolder, filename in os.walk(origin):
-		for file in filename:
-			file_src = os.path.join(foldername, file)
+	file_downloading = []
+	file_moved = []
+	file_exists = []
+	
+	for root, dirs, files in os.walk(origin):
+		for file in files:
+			if file + '.aria2' in files:
+				file_downloading.append(file)
+				break
+			
+			file_src = os.path.join(root, file)
 			file_src = rename_file(file_src)
 			file_des = os.path.join(destination, file_src.split('\\')[-1])
 			if file_src.endswith(filetype):
 				if os.path.exists(file_des):
-					print('Failed {0} is exist'.format(file_src))
+					file_exists.append(file_des)
 					continue
 				move(file_src, destination)
 				count += 1
-				print('Success {0} is moved to {1}'.format(
-					file_src.split('\\')[-1], destination.split('\\')[-1]))
+				file_moved.append(file_src.split('\\')[-1])
+	
+	print('\nMoved {0} files to {1}\n'.format(count, destination.split('\\')[-1]))
+	
+	my_print(file_moved, 'is moved to {0}'.format(destination.split('\\')[-1]))
+	my_print(file_downloading, 'is downloading')
+	my_print(file_exists, 'exist')
 
-	print('Moved {0} files to {1}'.format(count, destination.split('\\')[-1]))
 
-
-def rename_file(file):
+def rename_file(file: str) -> str:
 	"""
 	:param file: 文件绝对路径及名称
 	:return:
 	"""
 	pattern1 = ['_', '-']
-	pattern2 = ['1.', '2.', '3.', '4.', 'A.', 'B.', 'C.', 'D.','a.','b.','c.','d.']
+	pattern2 = ['1.', '2.', '3.', '4.', 'A.', 'B.', 'C.', 'D.', 'a.', 'b.', 'c.', 'd.']
 	number = {
 		'A.': '1.',
 		'B.': '2.',
@@ -52,7 +65,7 @@ def rename_file(file):
 		'c.': '3.',
 		'd.': '4.',
 	}
-
+	
 	result = file
 	for pat1 in pattern1:
 		for pat2 in pattern2:
@@ -63,20 +76,58 @@ def rename_file(file):
 				if pat2 in number:
 					result = result.replace(pat2, number[pat2])
 				os.rename(file, result)
-				print("{} renamed {}".format(
-					file.split('\\')[-1], result.split('\\')[-1]))
+				print("{} renamed {}".format(file.split('\\')[-1], result.split('\\')[-1]))
 				break
-
+	
 	return result
+
+
+def remove_null_dirs(origin_dir: str) -> None:
+	"""
+	删除空文件夹
+	Args:
+		origin_dir:
+
+	Returns:
+
+	"""
+	
+	file_remove = []
+	
+	for root, dirs, files in os.walk(origin_dir):
+		for origin_dir in dirs:
+			dir_path = os.path.join(root, origin_dir)
+			allfiles = os.listdir(dir_path)
+			if len(allfiles) == 0:
+				# os.removedirs(dir_path)
+				send2trash(dir_path)
+				file_remove.append('.\\' + dir_path.split('\\')[-2] + '\\' + dir_path.split('\\')[-1])
+		# file_remove.append(dir_path.split('\\')[-1])
+	my_print(file_remove, 'is send2trash')
+
+
+def my_print(files: list, ending: str):
+	if not files:
+		return
+	print(50 * '-')
+	for file in files:
+		print(f'{file:20}', ending)
+	pass
 
 
 if __name__ == '__main__':
 	ori = r'D:\Download\aria2'
-	des = r'D:\Download\QQDownload\Single'
-	file_end = ('.mp4','.jpg','.wmv','.mov','.mkv')
-
-	if not os.path.exists(des):
-		os.makedirs(des)
-
-	move_file(ori, des, file_end)
-
+	des = [r'D:\Download\QQDownload\Single', r'D:\Download\EU']
+	file_end = ('.mp4', '.jpg', '.wmv', '.mov', '.mkv', 'avi')
+	des_ch = des[0]
+	
+	if len(sys.argv) < 2:
+		des_ch = des[0]
+	else:
+		des_ch = des[int(sys.argv[1])]
+	
+	if not os.path.exists(des_ch):
+		os.makedirs(des_ch)
+	
+	move_file(ori, des_ch, file_end)
+	remove_null_dirs(ori)
