@@ -3,7 +3,8 @@
 # Created by calle on 2021/1/1
 # Copyright (c) 2021 calle. All rights reserved.
 
-import os, sys
+import os
+
 from shutil import move
 
 from send2trash import send2trash
@@ -43,10 +44,10 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 				
 				if len(file) > 15:
 					move(file_src, des2)
-					file_moved.append(file_src.split('\\')[-1] + 'is moved to ' + des2.split('\\')[-1])
+					file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + des2.split('\\')[-1])
 				else:
 					move(file_src, des1)
-					file_moved.append(file_src.split('\\')[-1] + 'is moved to ' + des1.split('\\')[-1])
+					file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + des1.split('\\')[-1])
 				
 				count += 1
 	
@@ -121,19 +122,12 @@ def my_print(files: list, ending: str):
 	print(80 * '-')
 	for file in files:
 		print(f'{file:50}', ending)
-	pass
 
 
 if __name__ == '__main__':
 	ori = r'D:\Download\aria2'
 	des = [r'D:\Download\QQDownload\Single', r'D:\Download\EU']
 	file_end = ('.mp4', '.jpg', '.wmv', '.mov', '.mkv', 'avi')
-	
-	# des_ch = des[0]	
-	# if len(sys.argv) < 2:
-	# 	des_ch = des[0]
-	# else:
-	# 	des_ch = des[int(sys.argv[1])]
 	
 	for item in des:
 		if not os.path.exists(item):
