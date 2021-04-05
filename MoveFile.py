@@ -4,6 +4,7 @@
 # Copyright (c) 2021 calle. All rights reserved.
 
 import os
+import re
 
 from shutil import move
 
@@ -42,7 +43,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 					file_exists.append(file_des)
 					continue
 				
-				if len(file) > 15:
+				if file_type(file) == 0:
 					move(file_src, des2)
 					file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + des2.split('\\')[-1])
 				else:
@@ -114,6 +115,26 @@ def remove_null_dirs(origin_dir: str) -> None:
 				file_remove.append('.\\' + dir_path.split('\\')[-2] + '\\' + dir_path.split('\\')[-1])
 	# file_remove.append(dir_path.split('\\')[-1])
 	my_print(file_remove, 'is send2trash')
+
+
+def file_type(filename: str) -> int:
+	"""
+	
+	Args:
+		filename:  文件名str
+
+	Returns:
+		0   eu
+		1   single
+
+	"""
+	pat = r'\d{2}\.\d{2}\.\d{2}'
+	date = re.search(pat, filename)
+	
+	if date:
+		return 0
+	else:
+		return 1
 
 
 def my_print(files: list, ending: str):
