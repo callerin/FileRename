@@ -9,13 +9,13 @@ from shutil import move
 from send2trash import send2trash
 
 
-def move_file(origin: str, destination: str, filetype: tuple = ('.mp4', '.jpg', '.nfo')):
+def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg', '.nfo')):
 	"""
 	移动文件夹下所有符合要求的文件到另一文件夹
 
 	args:
 			origin (str):           	待转移文件夹位置
-			destination ([type]):   	目标文件夹
+			destination ([type]):   	目标文件夹列表
 			filetype (tuple, optional): 文件后缀. defaults to ('.mp4', '.jpg', '.nfo').
 	"""
 	
@@ -23,6 +23,9 @@ def move_file(origin: str, destination: str, filetype: tuple = ('.mp4', '.jpg', 
 	file_downloading = []
 	file_moved = []
 	file_exists = []
+	
+	des1 = destination[0]
+	des2 = destination[1]
 	
 	for root, dirs, files in os.walk(origin):
 		for file in files:
@@ -32,18 +35,24 @@ def move_file(origin: str, destination: str, filetype: tuple = ('.mp4', '.jpg', 
 			
 			file_src = os.path.join(root, file)
 			file_src = rename_file(file_src)
-			file_des = os.path.join(destination, file_src.split('\\')[-1])
+			file_des = os.path.join(des1, file_src.split('\\')[-1])
 			if file_src.endswith(filetype):
 				if os.path.exists(file_des):
 					file_exists.append(file_des)
 					continue
-				move(file_src, destination)
+				
+				if len(file) > 15:
+					move(file_src, des2)
+					file_moved.append(file_src.split('\\')[-1] + 'is moved to ' + des2.split('\\')[-1])
+				else:
+					move(file_src, des1)
+					file_moved.append(file_src.split('\\')[-1] + 'is moved to ' + des1.split('\\')[-1])
+				
 				count += 1
-				file_moved.append(file_src.split('\\')[-1])
 	
-	print('\nMoved {0} files to {1}\n'.format(count, destination.split('\\')[-1]))
+	print('\nMoved {0} files\n'.format(count))
 	
-	my_print(file_moved, 'is moved to {0}'.format(destination.split('\\')[-1]))
+	my_print(file_moved, '')
 	my_print(file_downloading, 'is downloading')
 	my_print(file_exists, 'exist')
 
@@ -102,16 +111,16 @@ def remove_null_dirs(origin_dir: str) -> None:
 				# os.removedirs(dir_path)
 				send2trash(dir_path)
 				file_remove.append('.\\' + dir_path.split('\\')[-2] + '\\' + dir_path.split('\\')[-1])
-		# file_remove.append(dir_path.split('\\')[-1])
+	# file_remove.append(dir_path.split('\\')[-1])
 	my_print(file_remove, 'is send2trash')
 
 
 def my_print(files: list, ending: str):
 	if not files:
 		return
-	print(50 * '-')
+	print(80 * '-')
 	for file in files:
-		print(f'{file:20}', ending)
+		print(f'{file:50}', ending)
 	pass
 
 
@@ -119,15 +128,16 @@ if __name__ == '__main__':
 	ori = r'D:\Download\aria2'
 	des = [r'D:\Download\QQDownload\Single', r'D:\Download\EU']
 	file_end = ('.mp4', '.jpg', '.wmv', '.mov', '.mkv', 'avi')
-	des_ch = des[0]
 	
-	if len(sys.argv) < 2:
-		des_ch = des[0]
-	else:
-		des_ch = des[int(sys.argv[1])]
+	# des_ch = des[0]	
+	# if len(sys.argv) < 2:
+	# 	des_ch = des[0]
+	# else:
+	# 	des_ch = des[int(sys.argv[1])]
 	
-	if not os.path.exists(des_ch):
-		os.makedirs(des_ch)
+	for item in des:
+		if not os.path.exists(item):
+			os.makedirs(item)
 	
-	move_file(ori, des_ch, file_end)
+	move_file(ori, des, file_end)
 	remove_null_dirs(ori)
