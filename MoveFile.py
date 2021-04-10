@@ -10,6 +10,8 @@ from shutil import move
 
 from send2trash import send2trash
 
+file_remove = []
+
 
 def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg', '.nfo')):
 	"""
@@ -28,6 +30,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 	
 	des1 = destination[0]
 	des2 = destination[1]
+	del_name = ['情报', '有趣', '直播', '老师', '魔王', '地址', '.url', 'png', 'txt', 'mht', 'gif']
 	
 	for root, dirs, files in os.walk(origin):
 		for file in files:
@@ -38,6 +41,13 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 			file_src = os.path.join(root, file)
 			file_src = rename_file(file_src)
 			file_des = os.path.join(des1, file_src.split('\\')[-1])
+			
+			if any(name in file for name in del_name):
+				file_remove.append(file)
+				send2trash(file_src)
+				# print(f'{file_src} is sendtrash')
+				continue
+			
 			if file_src.endswith(filetype):
 				if os.path.exists(file_des):
 					file_exists.append(file_des)
@@ -102,8 +112,6 @@ def remove_null_dirs(origin_dir: str) -> None:
 	Returns:
 
 	"""
-	
-	file_remove = []
 	
 	for root, dirs, files in os.walk(origin_dir):
 		for origin_dir in dirs:
