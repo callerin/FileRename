@@ -31,7 +31,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 	
 	des1 = destination[0]
 	des2 = destination[1]
-	del_name = ['情报', '有趣', '直播', '魔王', '地址', '.url', 'png', 'txt', 'mht', 'gif']
+	del_name = ['情报', '有趣', '直播', '魔王', '地址', '推荐', '.url', 'png', 'txt', 'mht', 'gif', 'nfo']
 	
 	for root, dirs, files in os.walk(origin):
 		for file in files:
