@@ -116,9 +116,9 @@ def remove_null_dirs(origin_dir: str) -> None:
 
 	"""
 	
-	for root, dirs, files in os.walk(origin_dir):
-		for origin_dir in dirs:
-			dir_path = os.path.join(root, origin_dir)
+	for root, dirs, files in os.walk(origin_dir, topdown=False):
+		for dir1 in dirs:
+			dir_path = os.path.join(root, dir1)
 			allfiles = os.listdir(dir_path)
 			if len(allfiles) == 0:
 				# os.removedirs(dir_path)
