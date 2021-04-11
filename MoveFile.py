@@ -116,7 +116,7 @@ def remove_null_dirs(origin_dir: str) -> None:
 
 	"""
 	
-	for root, dirs, files in os.walk(origin_dir, topdown=False):
+	for root, dirs, files in os.walk(origin_dir, topdown=False):  # topdown=False 递归文件夹深度 由下到上
 		for dir1 in dirs:
 			dir_path = os.path.join(root, dir1)
 			allfiles = os.listdir(dir_path)
