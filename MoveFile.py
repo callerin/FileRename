@@ -5,6 +5,7 @@
 
 import os
 import re
+import sys
 
 from shutil import move
 
@@ -30,11 +31,11 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 	
 	des1 = destination[0]
 	des2 = destination[1]
-	del_name = ['情报', '有趣', '直播', '老师', '魔王', '地址', '.url', 'png', 'txt', 'mht', 'gif']
+	del_name = ['情报', '有趣', '直播', '魔王', '地址', '.url', 'png', 'txt', 'mht', 'gif']
 	
 	for root, dirs, files in os.walk(origin):
 		for file in files:
-			if file + '.aria2' in files:
+			if file + '.aria2' in files or file.endswith('.aria2'):
 				file_downloading.append(file)
 				break
 			
@@ -71,8 +72,10 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 
 def rename_file(file: str) -> str:
 	"""
+
 	:param file: 文件绝对路径及名称
 	:return:
+
 	"""
 	pattern1 = ['_', '-']
 	pattern2 = ['1.', '2.', '3.', '4.', 'A.', 'B.', 'C.', 'D.', 'a.', 'b.', 'c.', 'd.']
@@ -113,9 +116,9 @@ def remove_null_dirs(origin_dir: str) -> None:
 
 	"""
 	
-	for root, dirs, files in os.walk(origin_dir):
-		for origin_dir in dirs:
-			dir_path = os.path.join(root, origin_dir)
+	for root, dirs, files in os.walk(origin_dir, topdown=False):
+		for dir1 in dirs:
+			dir_path = os.path.join(root, dir1)
 			allfiles = os.listdir(dir_path)
 			if len(allfiles) == 0:
 				# os.removedirs(dir_path)
@@ -158,6 +161,15 @@ if __name__ == '__main__':
 	des = [r'D:\Download\QQDownload\Single', r'D:\Download\EU']
 	file_end = ('.mp4', '.jpg', '.wmv', '.mov', '.mkv', 'avi')
 	
+	if len(sys.argv) == 2:
+		if os.path.isdir(sys.argv[1]):
+			ori = sys.argv[1]
+	elif len(sys.argv) == 3:
+		if os.path.isdir(sys.argv[2]):
+			des[0] = sys.argv[2]
+	elif len(sys.argv) == 4:
+		if os.path.isdir(sys.argv[3]):
+			des[1] = sys.argv[3]
 	for item in des:
 		if not os.path.exists(item):
 			os.makedirs(item)
