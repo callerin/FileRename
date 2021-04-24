@@ -12,7 +12,7 @@ def clean_dir(fpath: str, deep: int = 2) -> None:
 	Returns:
 
 	"""
-	
+
 	dest = find_dest(fpath)
 	dirs = []
 	for i in range(deep - 1):
@@ -22,20 +22,20 @@ def clean_dir(fpath: str, deep: int = 2) -> None:
 				dirs.extend(temp)
 			else:
 				dest.extend(temp)
-	
+
 	for dirname in dirs:
 		print('{} is send2trash '.format(dirname))
 		send2trash.send2trash(dirname)
 
 
-def find_dest(fpath: str) -> list:
+def find_dest(f_path: str) -> list:
 	dest = []
-	dirlist = os.listdir(fpath)
-	for dir in dirlist:
-		dest.append(os.path.join(fpath, dir))
+	dir_list = os.listdir(f_path)
+	for dir in dir_list:
+		dest.append(os.path.join(f_path, dir))
 	# print(dest)
-	
+
 	return dest
 
 
-clean_dir(r'D:\Download\EU\Move',2)
+clean_dir(r'D:\Download\EU\Move', 2)

@@ -8,7 +8,6 @@ import re
 import sys
 
 from shutil import move
-
 from send2trash import send2trash
 
 file_remove = []
@@ -72,7 +71,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 
 def rename_file(file: str) -> str:
 	"""
-
+	重命名文件
 	:param file: 文件绝对路径及名称
 	:return:
 
@@ -130,7 +129,7 @@ def remove_null_dirs(origin_dir: str) -> None:
 
 def file_type(filename: str) -> int:
 	"""
-	
+	判断文件名中是否存在特殊字符
 	Args:
 		filename:  文件名str
 
@@ -149,6 +148,15 @@ def file_type(filename: str) -> int:
 
 
 def my_print(files: list, ending: str):
+	"""
+	按照固定格式打印文件列表
+	Args:
+		files:      待打印文件列表
+		ending:     后缀
+
+	Returns:
+
+	"""
 	if not files:
 		return
 	print(80 * '-')
