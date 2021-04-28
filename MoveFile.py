@@ -28,8 +28,6 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 	file_moved = []
 	file_exists = []
 
-	des1 = destination[0]
-	des2 = destination[1]
 	del_name = ['情报', '有趣', '直播', '魔王', '地址', '推荐', '.url', 'png', 'txt', 'mht', 'gif', 'nfo']
 
 	for root, dirs, files in os.walk(origin):
@@ -38,8 +36,15 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 				file_downloading.append(file)
 				break
 
+			file_t = file_type(file)
+			try:
+				file_des = destination[file_t]
+			except Exception as e:
+				print(e)
+				continue
+
 			file_src = os.path.join(root, file)
-			file_des = os.path.join(des1, file_src.split('\\')[-1])
+			file_des = os.path.join(file_des, file_src.split('\\')[-1])
 
 			if send_trash and any(name in file for name in del_name):
 				file_remove.append(file)
@@ -53,12 +58,8 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 
 				file_src = rename_file(file_src)
 
-				if file_type(file) == 0:
-					move(file_src, des2)
-					file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + des2.split('\\')[-1])
-				else:
-					move(file_src, des1)
-					file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + des1.split('\\')[-1])
+				move(file_src, file_des)
+				file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + file_des.split('\\')[-1])
 
 				count += 1
 
@@ -139,12 +140,12 @@ def file_type(filename: str) -> int:
 
 	"""
 	pat = r'\d{2}\.\d{2}\.\d{2}'
-	date = re.search(pat, filename)
+	data = re.search(pat, filename)
 
-	if date:
-		return 0
-	else:
+	if data:
 		return 1
+	else:
+		return 0
 
 
 def my_print(files: list, ending: str):
