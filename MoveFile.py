@@ -38,13 +38,13 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 
 			file_t = file_type(file)
 			try:
-				file_des = destination[file_t]
+				filep = destination[file_t]
 			except Exception as e:
 				print(e)
 				continue
 
 			file_src = os.path.join(root, file)
-			file_des = os.path.join(file_des, file_src.split('\\')[-1])
+			file_des = os.path.join(filep, file_src.split('\\')[-1])
 
 			if send_trash and any(name in file for name in del_name):
 				file_remove.append(file)
@@ -59,7 +59,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 				file_src = rename_file(file_src)
 
 				move(file_src, file_des)
-				file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + file_des.split('\\')[-1])
+				file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + filep.split('\\')[-1])
 
 				count += 1
 
