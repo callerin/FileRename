@@ -13,15 +13,21 @@ def clean_dir(fpath: str, deep: int = 2) -> None:
 
 	"""
 
-	dest = find_dest(fpath)
+	dest = []
 	dirs = []
-	for i in range(deep - 1):
+	dest.append(fpath)
+
+	for i in range(deep):
 		for name in dest:
-			temp = find_dest(name)
+			if os.path.isdir(name):
+				temp = find_dest(name)
+			else:
+				continue
+
 			if i == deep - 2:
 				dirs.extend(temp)
 			else:
-				dest.extend(temp)
+				dest = temp
 
 	for dirname in dirs:
 		print('{} is send2trash '.format(dirname))
@@ -38,4 +44,6 @@ def find_dest(f_path: str) -> list:
 	return dest
 
 
-clean_dir(r'D:\Download\EU\Move', 2)
+dir1 = r'D:\Pornhub'
+
+clean_dir(dir1, 3)

@@ -9,8 +9,10 @@ import sys
 
 from shutil import move
 from send2trash import send2trash
+from datetime import datetime
 
 file_remove = []
+count = 0
 
 
 def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg', '.nfo'), send_trash=True):
@@ -22,8 +24,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 			destination ([type]):   	目标文件夹列表
 			filetype (tuple, optional): 文件后缀. defaults to ('.mp4', '.jpg', '.nfo').
 	"""
-
-	count = 0
+	global count
 	file_downloading = []
 	file_moved = []
 	file_exists = []
@@ -38,13 +39,13 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 
 			file_t = file_type(file)
 			try:
-				filep = destination[file_t]
+				file_destination = destination[file_t]
 			except Exception as e:
 				print(e)
 				continue
 
 			file_src = os.path.join(root, file)
-			file_des = os.path.join(filep, file_src.split('\\')[-1])
+			file_des = os.path.join(file_destination, file_src.split('\\')[-1])
 
 			if send_trash and any(name in file for name in del_name):
 				file_remove.append(file)
@@ -57,13 +58,14 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 					continue
 
 				file_src = rename_file(file_src)
+				des_split = file_destination.split('\\')[-1]
+				print(f'Moving {file} to {des_split}')
 
 				move(file_src, file_des)
-				file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + filep.split('\\')[-1])
+
+				file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + des_split)
 
 				count += 1
-
-	print('\nMoved {0} files\n'.format(count))
 
 	my_print(file_moved, '')
 	my_print(file_downloading, 'is downloading')
@@ -139,10 +141,11 @@ def file_type(filename: str) -> int:
 		1   single
 
 	"""
-	pat = r'\d{2}\.\d{2}\.\d{2}'
+	pat = r'\d{2}\.\d{2}\.\d{2}|[4|2]k|2160|1080'
 	data = re.search(pat, filename)
 
 	if data:
+		# print(data.group())
 		return 1
 	else:
 		return 0
@@ -161,8 +164,14 @@ def my_print(files: list, ending: str):
 	if not files:
 		return
 	print(80 * '-')
+	print()
 	for file in files:
-		print(f'{file:50}', ending)
+		print(f'{file:60}', ending)
+
+
+# Todo add the method that write the change to file
+def write_change(moved: dict):
+	pass
 
 
 if __name__ == '__main__':
@@ -186,3 +195,5 @@ if __name__ == '__main__':
 	move_file(ori, des, file_end)
 	remove_null_dirs(ori)
 	move_file('R:\\', des, filetype=('.mp4', '.mkv'), send_trash=False)
+
+	print('\nMoved {0} files\n'.format(count))
