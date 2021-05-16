@@ -36,8 +36,11 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 	
 	for root, dirs, files in os.walk(origin):
 		for file in files:
-			if file + '.aria2' in files or file.endswith('.aria2'):
+			if file + '.aria2' in files:
 				file_downloading.append(file)
+				continue
+			
+			if file.endswith('.aria2'):
 				continue
 			
 			file_t = file_type(file)
@@ -201,7 +204,7 @@ def run_period(ori: str, des: list, minutes: float, t: int) -> None:
 	for i in range(t):
 		move_file(ori, des, filetype=('.mp4', '.mkv'))
 		remove_null_dirs(ori)
-		print(f'\n{time.strftime("%b-%d %A %H:%M:%S")}  Running {i + 1} time')
+		print(f'\n{time.strftime("%b-%d %A %H:%M:%S")}  Running {i + 1} time\n')
 		time.sleep(int(minutes * 60))
 
 
