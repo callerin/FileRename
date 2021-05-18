@@ -32,7 +32,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 	file_exists = []
 	file_remove = []
 	
-	del_name = ['情报', '有趣', '直播', '魔王', '地址', '推荐', '.url', 'png', 'txt', 'mht', 'gif', 'nfo']
+	del_name = ['情报', '有趣', '直播', '魔王', '地址', '推荐', '免费', '美女', '表演', '.url', 'png', 'txt', 'mht', 'gif', 'nfo']
 	
 	for root, dirs, files in os.walk(origin):
 		for file in files:
@@ -69,13 +69,17 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 				
 				# file_src = rename_file(file_src)
 				des_split = file_destination.split('\\')[-1]
-				print(f'{file} is moving to {des_split}')
-				
+				# print(f'{file} is moving to {des_split}')
+				sys.stdout.write(f'{file} is moving to {des_split}')
+				sys.stdout.flush()
 				try:
 					move(file_src, file_des)
 				except Exception as e:
 					print(e)
 					os.remove(os.path.join(file, file_des))
+				
+				sys.stdout.write('\r')
+				sys.stdout.flush()
 				
 				file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + des_split)
 				
