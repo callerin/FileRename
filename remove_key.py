@@ -32,7 +32,7 @@ def removeKey(file_path: str, keyword: tuple) -> None:
 if __name__ == "__main__":
 
 	# file_path = r'D:\Download\Baidu'
-	filepath = r'R:\Download'
+	filepath = r'R:\aria2'
 
 	end = ('diz', 'nfo', 'exe', 'BANNER', 'txt')
 
