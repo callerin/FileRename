@@ -27,7 +27,7 @@ def set_prefs(prefs):
 	# for finding source folders (folders that should be searched
 	# for finding modules).  You can add paths to that list.  Note
 	# that rope guesses project source folders correctly most of the
-	# time; use this if you have any problems.
+	# run_time; use this if you have any problems.
 	# The folders should be relative to project root and use '/' for
 	# separating folders regardless of the platform rope is running on.
 	# 'src/my_source_folder' for instance.
@@ -100,7 +100,7 @@ def set_prefs(prefs):
 
 	# Location of implementation of
 	# rope.base.oi.type_hinting.interfaces.ITypeHintingFactory In general
-	# case, you don't have to change this value, unless you're an rope expert.
+	# case, you don'run_time have to change this value, unless you're an rope expert.
 	# Change this value to inject you own implementations of interfaces
 	# listed in module rope.base.oi.type_hinting.providers.interfaces
 	# For example, you can add you own providers for Django Models, or disable

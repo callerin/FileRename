@@ -80,24 +80,23 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 					continue
 
 				des_split = file_destination.split('\\')[-1]
-				# print(f'{file} is moving to {des_split}')
-				sys.stdout.write(f'{file} is moving to {des_split}')
-				sys.stdout.flush()
+				print(f'{file} is moving to {des_split}', end='', flush=True)
+
+				# sys.stdout.flush()
+				# sys.stdout.write(f'{file} is moving to {des_split}')
+				# sys.stdout.flush()
 				try:
 					if OpenPot:
 						open_player(file_src)
 					move(file_src, file_des)
+					file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + des_split)
 				except Exception as e:
-					logging.info(f'\nmove except {e}')
+					logging.info(f'\nmove except\n{e}')
 				# os.remove(os.path.join(file, file_des))
+				print('\r', end='')
+				print(120 * ' ', end='')
+				print('\r', end='', flush=True)
 
-				sys.stdout.write('\r')
-				sys.stdout.write(200 * ' ')
-				sys.stdout.write('\r')
-				sys.stdout.flush()
-				sys.stdout.write('\r')
-
-				file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + des_split)
 				count += 1
 
 	my_print(file_moved, '')
@@ -201,7 +200,7 @@ def my_print(files: list, ending: str):
 	if not files:
 		return
 	print(80 * '-')
-	print()
+
 	for file in files:
 		print(f'{file:60}', ending)
 
@@ -211,23 +210,23 @@ def write_change(moved: dict):
 	pass
 
 
-def run_period(ori: str, des: list, minutes: float, t: int) -> None:
+def run_period(ori: str, des: list, minutes: float, run_time: int) -> None:
 	"""
 
 	Args:
 		ori (object):    文件路径
 		des:    目标路径
 		minutes:    间隔时间
-		t:          运行次数
+		run_time:          运行次数
 
 	Returns:
 
 	"""
-	time.sleep(int(minutes * 60))
-	for i in range(t):
+
+	for i in range(run_time):
+		print(f'\n{time.strftime("%b-%d %A %H:%M:%S")}  Running {i + 1} run_time')
 		move_file(ori, des, filetype=('.mp4', '.mkv', '.wmv'))
 		remove_null_dirs(ori)
-		print(f'\n{time.strftime("%b-%d %A %H:%M:%S")}  Running {i + 1} time\n')
 		time.sleep(int(minutes * 60))
 
 
@@ -266,8 +265,8 @@ if __name__ == '__main__':
 	print(time.strftime("%b-%d %A %H:%M:%S") + '\n')
 
 	print(f"OpenPot:{OpenPot}")
-	move_file(aria_2, des, file_end)
-	remove_null_dirs(aria_2)
+	# move_file(aria_2, des, file_end)
+	# remove_null_dirs(aria_2)
 
-	run_period(aria_2, des, 1.0, 200)
+	run_period(aria_2, des, 0.5, 300)
 	print('\nMoved {0} files\n'.format(count))
