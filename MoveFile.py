@@ -30,6 +30,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 	"""
 	global count
 	global file_remove
+	global OpenPot
 
 	file_downloading = []
 	file_moved = []
@@ -40,7 +41,8 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 		'情报', '有趣', '直播', '魔王', '地址', '推荐',
 		'免费', '美女', '国产', '表演', '.url', 'png',
 		'txt', 'mht', 'gif', 'nfo', '..mp4', '.exe',
-		'sample', '安卓', 'UU', '官方', '每天', '观看'
+		'sample', '安卓', 'UU', '官方', '每天', '观看',
+		'jpg', 'TXT'
 	]
 
 	for root, dirs, files in os.walk(origin):
@@ -60,6 +62,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 				continue
 
 			file_src = os.path.join(root, file)
+			file_src = rename_file(file_src)
 			file_des = os.path.join(file_destination, file_src.split('\\')[-1])
 
 			if send_trash and any(name in file for name in del_name):
@@ -76,25 +79,25 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 					file_exists.append(file_des)
 					continue
 
-				file_src = rename_file(file_src)
 				des_split = file_destination.split('\\')[-1]
 				# print(f'{file} is moving to {des_split}')
 				sys.stdout.write(f'{file} is moving to {des_split}')
 				sys.stdout.flush()
 				try:
-					open_player(file_src)
+					if OpenPot:
+						open_player(file_src)
 					move(file_src, file_des)
 				except Exception as e:
 					logging.info(f'\nmove except {e}')
-					os.remove(os.path.join(file, file_des))
+				# os.remove(os.path.join(file, file_des))
 
 				sys.stdout.write('\r')
 				sys.stdout.write(200 * ' ')
 				sys.stdout.write('\r')
 				sys.stdout.flush()
+				sys.stdout.write('\r')
 
 				file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + des_split)
-
 				count += 1
 
 	my_print(file_moved, '')
@@ -236,28 +239,35 @@ def open_player(filepath: str):
 
 if __name__ == '__main__':
 	ori = r'D:\Download\aria2'
+	aria_2 = 'R:\\aria2'
 	des = [r'D:\Download\QQDownload\Single', r'D:\Download\EU']
 	file_end = ('.mp4', '.jpg', '.wmv', '.mov', '.mkv', 'avi')
+
+	OpenPot = True
+	# OpenPot = False
 
 	if len(sys.argv) == 2:
 		if os.path.isdir(sys.argv[1]):
 			ori = sys.argv[1]
+		elif sys.argv[1] in ('0', 'False'):
+			OpenPot = False
+
 	elif len(sys.argv) == 3:
 		if os.path.isdir(sys.argv[2]):
 			des[0] = sys.argv[2]
 	elif len(sys.argv) == 4:
 		if os.path.isdir(sys.argv[3]):
 			des[1] = sys.argv[3]
+
 	for item in des:
 		if not os.path.exists(item):
 			os.makedirs(item)
 
 	print(time.strftime("%b-%d %A %H:%M:%S") + '\n')
-	move_file(ori, des, file_end)
-	remove_null_dirs(ori)
 
-	aria_2 = 'R:\\aria2'
+	print(f"OpenPot:{OpenPot}")
+	move_file(aria_2, des, file_end)
+	remove_null_dirs(aria_2)
 
-	move_file(aria_2, des, filetype=('.mp4', '.mkv'))
+	run_period(aria_2, des, 1.0, 200)
 	print('\nMoved {0} files\n'.format(count))
-	run_period(aria_2, des, 1.5, 120)
