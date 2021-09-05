@@ -17,6 +17,7 @@ logging.basicConfig(level=logging.DEBUG, format=" %(asctime)s - %(levelname)s - 
 
 file_remove = []
 count = 0
+MinSize = 300
 
 
 def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg', '.nfo'), send_trash=True):
@@ -37,14 +38,6 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 	file_exists = []
 	file_remove = []
 
-	del_name = [
-		'情报', '有趣', '直播', '魔王', '地址', '推荐',
-		'免费', '美女', '国产', '表演', '.url', 'png',
-		'txt', 'mht', 'gif', 'nfo', '..mp4', '.exe',
-		'sample', '安卓', 'UU', '官方', '每天', '观看',
-		'jpg', 'TXT'
-	]
-
 	for root, dirs, files in os.walk(origin):
 		for file in files:
 			if file + '.aria2' in files:
@@ -64,8 +57,9 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 			file_src = os.path.join(root, file)
 			file_src = rename_file(file_src)
 			file_des = os.path.join(file_destination, file_src.split('\\')[-1])
+			file_size = os.path.getsize(file_src) / (1024 * 1024)  # 返回 MB
 
-			if send_trash and any(name in file for name in del_name):
+			if send_trash and file_size < MinSize:
 				file_remove.append(file)
 				try:
 					send2trash(file_src)
