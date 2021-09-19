@@ -13,11 +13,12 @@ from send2trash import send2trash
 
 # logging.disable(logging.INFO)
 # logging.disable(logging.DEBUG)
-logging.basicConfig(level=logging.DEBUG, format=" %(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(level=logging.DEBUG,
+					format=" %(asctime)s - %(levelname)s - %(message)s")
 
 file_remove = []
 count = 0
-MinSize = 300
+MinSize = 100
 
 
 def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg', '.nfo'), send_trash=True):
@@ -25,9 +26,9 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 	移动文件夹下所有符合要求的文件到另一文件夹
 
 	args:
-			origin (str):           	待转移文件夹位置
-			destination ([type]):   	目标文件夹列表
-			filetype (tuple, optional): 文件后缀. defaults to ('.mp4', '.jpg', '.nfo').
+																	origin (str):           	待转移文件夹位置
+																	destination ([type]):   	目标文件夹列表
+																	filetype (tuple, optional): 文件后缀. defaults to ('.mp4', '.jpg', '.nfo').
 	"""
 	global count
 	global file_remove
@@ -83,7 +84,8 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 					if OpenPot:
 						open_player(file_src)
 					move(file_src, file_des)
-					file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + des_split)
+					file_moved.append(file_src.split(
+						'\\')[-1] + ' is moved to ' + des_split)
 				except Exception as e:
 					logging.info(f'\nmove except\n{e}')
 				# os.remove(os.path.join(file, file_des))
@@ -107,7 +109,8 @@ def rename_file(file: str) -> str:
 
 	"""
 	pattern1 = ['_', '-']
-	pattern2 = ['1.', '2.', '3.', '4.', 'A.', 'B.', 'C.', 'D.', 'E.', 'a.', 'b.', 'c.', 'd.', 'e.']
+	pattern2 = ['1.', '2.', '3.', '4.', 'A.', 'B.',
+				'C.', 'D.', 'E.', 'a.', 'b.', 'c.', 'd.', 'e.']
 	number = {
 		'A.': '1.',
 		'B.': '2.',
@@ -131,7 +134,8 @@ def rename_file(file: str) -> str:
 				if pat2 in number:
 					result = result.replace(pat2, number[pat2])
 				os.rename(file, result)
-				print("{} renamed {}".format(file.split('\\')[-1], result.split('\\')[-1]))
+				print("{} renamed {}".format(
+					file.split('\\')[-1], result.split('\\')[-1]))
 				break
 
 	return result
@@ -141,21 +145,23 @@ def remove_null_dirs(origin_dir: str) -> None:
 	"""
 	删除空文件夹
 	Args:
-		origin_dir:
+									origin_dir:
 
 	Returns:
 
 	"""
 	global file_remove
 
-	for root, dirs, files in os.walk(origin_dir, topdown=False):  # topdown=False 递归文件夹深度 由下到上
+	# topdown=False 递归文件夹深度 由下到上
+	for root, dirs, files in os.walk(origin_dir, topdown=False):
 		for dir1 in dirs:
 			dir_path = os.path.join(root, dir1)
 			allfiles = os.listdir(dir_path)
 			if len(allfiles) == 0:
 				# os.removedirs(dir_path)
 				send2trash(dir_path)
-				file_remove.append('.\\' + dir_path.split('\\')[-2] + '\\' + dir_path.split('\\')[-1])
+				file_remove.append('.\\' + dir_path.split('\\')
+								   [-2] + '\\' + dir_path.split('\\')[-1])
 	# file_remove.append(dir_path.split('\\')[-1])
 	my_print(file_remove, 'is send2trash')
 
@@ -164,11 +170,11 @@ def file_type(filename: str) -> int:
 	"""
 	判断文件名中是否存在特殊字符
 	Args:
-		filename:  文件名str
+									filename:  文件名str
 
 	Returns:
-		0   eu
-		1   single
+									0   eu
+									1   single
 
 	"""
 	pat = r'\d{2}\.\d{2}\.\d{2}|[4|2]k|2160|1080'
@@ -185,8 +191,8 @@ def my_print(files: list, ending: str):
 	"""
 	按照固定格式打印文件列表
 	Args:
-		files:      待打印文件列表
-		ending:     后缀
+									files:      待打印文件列表
+									ending:     后缀
 
 	Returns:
 
@@ -208,10 +214,10 @@ def run_period(ori: str, des: list, minutes: float, run_time: int) -> None:
 	"""
 
 	Args:
-		ori (object):    文件路径
-		des:    目标路径
-		minutes:    间隔时间
-		run_time:          运行次数
+									ori (object):    文件路径
+									des:    目标路径
+									minutes:    间隔时间
+									run_time:          运行次数
 
 	Returns:
 
