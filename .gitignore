@@ -1,2 +1,4 @@
 .idea/*
 test/*
+__pycache__/MoveFile.cpython-38.pyc
+.vscode/.ropeproject/objectdb

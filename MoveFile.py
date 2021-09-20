@@ -13,8 +13,7 @@ from send2trash import send2trash
 
 # logging.disable(logging.INFO)
 # logging.disable(logging.DEBUG)
-logging.basicConfig(level=logging.DEBUG,
-					format=" %(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(level=logging.DEBUG, format=" %(asctime)s - %(levelname)s - %(message)s")
 
 file_remove = []
 count = 0
@@ -26,9 +25,9 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 	移动文件夹下所有符合要求的文件到另一文件夹
 
 	args:
-																	origin (str):           	待转移文件夹位置
-																	destination ([type]):   	目标文件夹列表
-																	filetype (tuple, optional): 文件后缀. defaults to ('.mp4', '.jpg', '.nfo').
+		origin (str):           	待转移文件夹位置
+		destination ([type]):   	目标文件夹列表
+		filetype (tuple, optional): 文件后缀. defaults to ('.mp4', '.jpg', '.nfo').
 	"""
 	global count
 	global file_remove
@@ -84,8 +83,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 					if OpenPot:
 						open_player(file_src)
 					move(file_src, file_des)
-					file_moved.append(file_src.split(
-						'\\')[-1] + ' is moved to ' + des_split)
+					file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + des_split)
 				except Exception as e:
 					logging.info(f'\nmove except\n{e}')
 				# os.remove(os.path.join(file, file_des))
@@ -109,8 +107,7 @@ def rename_file(file: str) -> str:
 
 	"""
 	pattern1 = ['_', '-']
-	pattern2 = ['1.', '2.', '3.', '4.', 'A.', 'B.',
-				'C.', 'D.', 'E.', 'a.', 'b.', 'c.', 'd.', 'e.']
+	pattern2 = ['1.', '2.', '3.', '4.', 'A.', 'B.', 'C.', 'D.', 'E.', 'a.', 'b.', 'c.', 'd.', 'e.']
 	number = {
 		'A.': '1.',
 		'B.': '2.',
@@ -134,8 +131,7 @@ def rename_file(file: str) -> str:
 				if pat2 in number:
 					result = result.replace(pat2, number[pat2])
 				os.rename(file, result)
-				print("{} renamed {}".format(
-					file.split('\\')[-1], result.split('\\')[-1]))
+				print("{} renamed {}".format(file.split('\\')[-1], result.split('\\')[-1]))
 				break
 
 	return result
@@ -161,7 +157,7 @@ def remove_null_dirs(origin_dir: str) -> None:
 				# os.removedirs(dir_path)
 				send2trash(dir_path)
 				file_remove.append('.\\' + dir_path.split('\\')
-								   [-2] + '\\' + dir_path.split('\\')[-1])
+				[-2] + '\\' + dir_path.split('\\')[-1])
 	# file_remove.append(dir_path.split('\\')[-1])
 	my_print(file_remove, 'is send2trash')
 
