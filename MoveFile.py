@@ -166,11 +166,11 @@ def file_type(filename: str) -> int:
 	"""
 	判断文件名中是否存在特殊字符
 	Args:
-									filename:  文件名str
+								filename:  文件名str
 
 	Returns:
-									0   eu
-									1   single
+								0   eu
+								1   single
 
 	"""
 	pat = r'\d{2}\.\d{2}\.\d{2}|[4|2]k|2160|1080'
@@ -210,10 +210,10 @@ def run_period(ori: str, des: list, minutes: float, run_time: int) -> None:
 	"""
 
 	Args:
-									ori (object):    文件路径
-									des:    目标路径
-									minutes:    间隔时间
-									run_time:          运行次数
+			ori (object):    文件路径
+			des:    目标路径
+			minutes:    间隔时间
+			run_time:          运行次数
 
 	Returns:
 
