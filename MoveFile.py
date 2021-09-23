@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.DEBUG, format=" %(asctime)s - %(levelname)s - 
 
 file_remove = []
 count = 0
-MinSize = 100
+MinSize = 300
 
 
 def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg', '.nfo'), send_trash=True):
@@ -25,9 +25,9 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 	移动文件夹下所有符合要求的文件到另一文件夹
 
 	args:
-		origin (str):           	待转移文件夹位置
-		destination ([type]):   	目标文件夹列表
-		filetype (tuple, optional): 文件后缀. defaults to ('.mp4', '.jpg', '.nfo').
+			origin (str):           	待转移文件夹位置
+			destination ([type]):   	目标文件夹列表
+			filetype (tuple, optional): 文件后缀. defaults to ('.mp4', '.jpg', '.nfo').
 	"""
 	global count
 	global file_remove
@@ -141,23 +141,21 @@ def remove_null_dirs(origin_dir: str) -> None:
 	"""
 	删除空文件夹
 	Args:
-									origin_dir:
+		origin_dir:
 
 	Returns:
 
 	"""
 	global file_remove
 
-	# topdown=False 递归文件夹深度 由下到上
-	for root, dirs, files in os.walk(origin_dir, topdown=False):
+	for root, dirs, files in os.walk(origin_dir, topdown=False):  # topdown=False 递归文件夹深度 由下到上
 		for dir1 in dirs:
 			dir_path = os.path.join(root, dir1)
 			allfiles = os.listdir(dir_path)
 			if len(allfiles) == 0:
 				# os.removedirs(dir_path)
 				send2trash(dir_path)
-				file_remove.append('.\\' + dir_path.split('\\')
-				[-2] + '\\' + dir_path.split('\\')[-1])
+				file_remove.append('.\\' + dir_path.split('\\')[-2] + '\\' + dir_path.split('\\')[-1])
 	# file_remove.append(dir_path.split('\\')[-1])
 	my_print(file_remove, 'is send2trash')
 
@@ -166,11 +164,11 @@ def file_type(filename: str) -> int:
 	"""
 	判断文件名中是否存在特殊字符
 	Args:
-								filename:  文件名str
+		filename:  文件名str
 
 	Returns:
-								0   eu
-								1   single
+		0   eu
+		1   single
 
 	"""
 	pat = r'\d{2}\.\d{2}\.\d{2}|[4|2]k|2160|1080'
@@ -187,8 +185,8 @@ def my_print(files: list, ending: str):
 	"""
 	按照固定格式打印文件列表
 	Args:
-									files:      待打印文件列表
-									ending:     后缀
+		files:      待打印文件列表
+		ending:     后缀
 
 	Returns:
 
@@ -210,10 +208,10 @@ def run_period(ori: str, des: list, minutes: float, run_time: int) -> None:
 	"""
 
 	Args:
-			ori (object):    文件路径
-			des:    目标路径
-			minutes:    间隔时间
-			run_time:          运行次数
+		ori (object):    文件路径
+		des:    目标路径
+		minutes:    间隔时间
+		run_time:          运行次数
 
 	Returns:
 
