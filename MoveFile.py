@@ -20,7 +20,7 @@ count = 0
 MinSize = 300
 
 
-def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg', '.nfo'), send_trash=True):
+def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg', '.nfo', '.MP4'), send_trash=True):
 	"""
 	移动文件夹下所有符合要求的文件到另一文件夹
 
@@ -85,7 +85,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 					move(file_src, file_des)
 					file_moved.append(file_src.split('\\')[-1] + ' is moved to ' + des_split)
 				except Exception as e:
-					logging.info(f'\nmove except\n{e}')
+					logging.info(f'\n\n{e}')
 				# os.remove(os.path.join(file, file_des))
 				print('\r', end='')
 				print(120 * ' ', end='')
@@ -218,7 +218,7 @@ def run_period(ori: str, des: list, minutes: float, run_time: int) -> None:
 	"""
 
 	for i in range(run_time):
-		print(f'\n{time.strftime("%b-%d %A %H:%M:%S")}  Running {i + 1} run_time')
+		print(f'\n{time.strftime("%b-%d %A %H:%M:%S")}  Running {i + 1} OpenPot:{OpenPot}')
 		move_file(ori, des, filetype=('.mp4', '.mkv', '.wmv'))
 		remove_null_dirs(ori)
 		time.sleep(int(minutes * 60))
@@ -262,5 +262,5 @@ if __name__ == '__main__':
 	# move_file(aria_2, des, file_end)
 	# remove_null_dirs(aria_2)
 
-	run_period(aria_2, des, 0.5, 300)
+	run_period(aria_2, des, 0.5, 500)
 	print('\nMoved {0} files\n'.format(count))
