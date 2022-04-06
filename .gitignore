@@ -3,3 +3,4 @@ test/*
 __pycache__/*
 .vscode/*
 anime_sc.py
+.vscode/*
