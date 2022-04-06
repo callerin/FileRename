@@ -269,5 +269,5 @@ if __name__ == '__main__':
 
 	print(f"OpenPot:{OpenPot}")
 
-	run_period(aria_2, des, 1, 500)
+	run_period(aria_2, des, 1, 600)
 	print('\nMoved {0} files\n'.format(count))
