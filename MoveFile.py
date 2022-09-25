@@ -4,12 +4,14 @@
 # Copyright (c) 2021 calle. All rights reserved.
 
 
+from calendar import c
 import os
 import re
 import sys
 import time
 import logging
 from shutil import move
+from xml.sax.handler import DTDHandler
 from send2trash import send2trash
 
 # logging.disable(logging.INFO)
@@ -27,9 +29,9 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 	移动文件夹下所有符合要求的文件到另一文件夹
 
 	args:
-					origin (str):           	待转移文件夹位置
-					destination ([type]):   	目标文件夹列表
-					filetype (tuple, optional): 文件后缀. defaults to ('.mp4', '.jpg', '.nfo').
+		origin (str):           	待转移文件夹位置
+		destination ([type]):   	目标文件夹列表
+		filetype (tuple, optional): 文件后缀. defaults to ('.mp4', '.jpg', '.nfo').
 	"""
 	global count
 	global file_remove
@@ -61,7 +63,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 			file_des = os.path.join(file_destination, file_src.split('\\')[-1])
 			file_size = os.path.getsize(file_src) / (1024 * 1024)  # 返回 MB
 
-			if send_trash and file_size < MinSize:
+			if send_trash and file_size < MinSize and not file.endswith('.torrent'):
 				file_remove.append(file)
 				try:
 					send2trash(file_src)
@@ -146,7 +148,7 @@ def remove_null_dirs(origin_dir: str) -> None:
 	"""
 	删除空文件夹
 	Args:
-			origin_dir:
+									origin_dir:
 
 	Returns:
 
@@ -171,11 +173,11 @@ def file_type(filename: str) -> int:
 	"""
 	判断文件名中是否存在特殊字符
 	Args:
-			filename:  文件名str
+									filename:  文件名str
 
 	Returns:
-			0   eu
-			1   single
+									0   eu
+									1   single
 
 	"""
 	pat = r'\d{2}\.\d{2}\.\d{2}|[4|2]k|2160|1080'
@@ -192,8 +194,8 @@ def my_print(files: list, ending: str):
 	"""
 	按照固定格式打印文件列表
 	Args:
-			files:      待打印文件列表
-			ending:     后缀
+									files:      待打印文件列表
+									ending:     后缀
 
 	Returns:
 
@@ -215,10 +217,10 @@ def run_period(origin_destination: str, destination: list, minutes: float, run_t
 	"""
 
 	Args:
-			origin_destination (object):    文件路径
-			destination:    				目标路径
-			minutes:   						间隔时间
-			run_time:          				运行次数
+									origin_destination (object):    文件路径
+									destination:    				目标路径
+									minutes:   						间隔时间
+									run_time:          				运行次数
 
 	Returns:
 
@@ -242,6 +244,7 @@ def open_player(filepath: str):
 if __name__ == '__main__':
 	ori = r'D:\Download\aria2'
 	aria_2 = 'R:\\aria2'
+	# aria_2 = 'D:\Download\Thunder'
 	des = [r'D:\Download\QQDownload\Single', r'D:\Download\EU']
 	file_end = ('.mp4', '.jpg', '.wmv', '.mov', '.mkv', 'avi')
 
