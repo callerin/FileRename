@@ -11,10 +11,11 @@ import time
 import logging
 from shutil import move
 from send2trash import send2trash
+from playsound import playsound
 
 # logging.disable(logging.INFO)
 # logging.disable(logging.DEBUG)
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.INFO,
                     format=" %(asctime)s - %(levelname)s - %(message)s")
 
 file_remove = []
@@ -39,6 +40,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
     file_moved = []
     file_exists = []
     file_remove = []
+    del_deny = ('tmp')
 
     for root, dirs, files in os.walk(origin):
         for file in files:
@@ -57,11 +59,10 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
                 continue
 
             file_src = os.path.join(root, file)
-            file_src = rename_file(file_src)
             file_des = os.path.join(file_destination, file_src.split('\\')[-1])
             file_size = os.path.getsize(file_src) / (1024 * 1024)  # 返回 MB
 
-            if send_trash and file_size < MinSize:
+            if send_trash and file_size < MinSize and not any(file_src.endswith(tmp) for tmp in del_deny):
                 file_remove.append(file)
                 try:
                     send2trash(file_src)
@@ -87,6 +88,8 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
                     move(file_src, file_des)
                     file_moved.append(file_src.split(
                         '\\')[-1] + ' is moved to ' + des_split)
+                    rename_file(file_des)
+                    playsound('d:/Data/User/Python/Practice/source/download-complete.wav')
                 except Exception as e:
                     logging.info(f'\n\n{e}')
                 # os.remove(os.path.join(file, file_des))
@@ -126,15 +129,24 @@ def rename_file(file: str) -> str:
     }
 
     result = file
+    file_path = os.path.split(file)[0]
+    file_name = os.path.split(file)[1]
+    file_sname = os.path.splitext(file_name)[0]
     for pat1 in pattern1:
         for pat2 in pattern2:
             pattern = pat1 + pat2
-            if pattern in file:
+            if pattern in file_name:
                 series = pattern.replace(pat1, '.CD')
-                result = file.replace(pattern, series)
+                result = file_name.replace(pattern, series)
                 if pat2 in number:
                     result = result.replace(pat2, number[pat2])
-                os.rename(file, result)
+
+                des_path = os.path.join(file_path, file_sname)
+                if not os.path.exists(des_path):
+                    os.mkdir(des_path)
+
+                des = os.path.join(des_path, result)
+                move(file, des)
                 print("{} renamed {}".format(
                     file.split('\\')[-1], result.split('\\')[-1]))
                 break
@@ -171,7 +183,7 @@ def file_type(filename: str) -> int:
     """
     判断文件名中是否存在特殊字符
     Args:
-            filename:  文件名str
+        filename:  文件名str
 
     Returns:
         0   eu
@@ -192,8 +204,8 @@ def my_print(files: list, ending: str):
     """
     按照固定格式打印文件列表
     Args:
-            files:      待打印文件列表
-            ending:     后缀
+        files:      待打印文件列表
+        ending:     后缀
 
     Returns:
 
@@ -228,7 +240,7 @@ def run_period(origin_destination: str, destination: list, minutes: float, run_t
         print(
             f'\n{time.strftime("%b-%d %A %H:%M:%S")}  Running {i + 1} OpenPot:{OpenPot} Complet:{count}')
         move_file(origin_destination, destination,
-                  filetype=('.mp4', '.mkv', '.wmv'))
+                  filetype=('.mp4', '.mkv', '.wmv','avi'))
         remove_null_dirs(origin_destination)
         time.sleep(int(minutes * 60))
 
