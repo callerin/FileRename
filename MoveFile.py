@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.INFO,
 
 file_remove = []
 count = 0
-MinSize = 300
+MinSize = 200
 
 
 def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg', '.nfo', '.MP4'), send_trash=True):
@@ -40,7 +40,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
     file_moved = []
     file_exists = []
     file_remove = []
-    del_deny = ('tmp')
+    del_deny = ('.tmp', '.mkv')
 
     for root, dirs, files in os.walk(origin):
         for file in files:
@@ -60,7 +60,10 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 
             file_src = os.path.join(root, file)
             file_des = os.path.join(file_destination, file_src.split('\\')[-1])
-            file_size = os.path.getsize(file_src) / (1024 * 1024)  # 返回 MB
+            try:
+                file_size = os.path.getsize(file_src) / (1024 * 1024)  # 返回 MB
+            except Exception as e:
+                logging.error(f'get file size error {e}')
 
             if send_trash and file_size < MinSize and not any(file_src.endswith(tmp) for tmp in del_deny):
                 file_remove.append(file)
@@ -89,7 +92,8 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
                     file_moved.append(file_src.split(
                         '\\')[-1] + ' is moved to ' + des_split)
                     rename_file(file_des)
-                    playsound('d:/Data/User/Python/Practice/source/download-complete.wav')
+                    # playsound(
+                    #     'd:/Data/User/Python/Practice/source/download-complete.wav')
                 except Exception as e:
                     logging.info(f'\n\n{e}')
                 # os.remove(os.path.join(file, file_des))
@@ -141,7 +145,9 @@ def rename_file(file: str) -> str:
                 if pat2 in number:
                     result = result.replace(pat2, number[pat2])
 
-                des_path = os.path.join(file_path, file_sname)
+                len_part = len(pattern)-1
+                temp_name = file_sname[:-len_part]
+                des_path = os.path.join(file_path, temp_name)
                 if not os.path.exists(des_path):
                     os.mkdir(des_path)
 
@@ -190,7 +196,7 @@ def file_type(filename: str) -> int:
         1   single
 
     """
-    pat = r'\d{2}\.\d{2}\.\d{2}|[4|2]k|2160|1080'
+    pat = r'\d{2}\.\d{2}\.\d{2}|2160|1080'
     data = re.search(pat, filename)
 
     if data:
@@ -240,7 +246,7 @@ def run_period(origin_destination: str, destination: list, minutes: float, run_t
         print(
             f'\n{time.strftime("%b-%d %A %H:%M:%S")}  Running {i + 1} OpenPot:{OpenPot} Complet:{count}')
         move_file(origin_destination, destination,
-                  filetype=('.mp4', '.mkv', '.wmv','avi'))
+                  filetype=('.mp4', '.mkv', '.wmv', 'avi'))
         remove_null_dirs(origin_destination)
         time.sleep(int(minutes * 60))
 
@@ -255,9 +261,10 @@ if __name__ == '__main__':
     ori = r'D:\Download\aria2'
     aria_2 = 'R:\\aria2'
     des = [r'D:\Download\QQDownload\Single', r'D:\Download\EU']
+    # des = [r'E:\Download\QQDownload\Single', r'E:\Download\EU']
     file_end = ('.mp4', '.jpg', '.wmv', '.mov', '.mkv', 'avi')
 
-    OpenPot = True
+    # OpenPot = True
     OpenPot = False
 
     if len(sys.argv) == 2:
@@ -265,6 +272,8 @@ if __name__ == '__main__':
             ori = sys.argv[1]
         elif sys.argv[1] in ('0', 'False'):
             OpenPot = False
+        elif sys.argv[1] in ('1', 'True'):
+            OpenPot = True
 
     elif len(sys.argv) == 3:
         if os.path.isdir(sys.argv[2]):
@@ -281,5 +290,5 @@ if __name__ == '__main__':
 
     print(f"OpenPot:{OpenPot}")
 
-    run_period(aria_2, des, 1, 600)
+    run_period(aria_2, des, 0.1, 10000)
     print('\nMoved {0} files\n'.format(count))
