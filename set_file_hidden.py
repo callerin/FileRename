@@ -22,7 +22,7 @@ def win_hidden(filepath: str, type: tuple):  # 设置文件为隐藏
 						file_src, win32con.FILE_ATTRIBUTE_HIDDEN)
 					logging.info(f'{file} is hidden')
 			except Exception as e:
-				logging.error(e)
+				logging.error(f'set file hidden error{e}')
 				continue
 
 

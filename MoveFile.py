@@ -66,6 +66,9 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
                 logging.error(f'get file size error {e}')
 
             if send_trash and file_size < MinSize and not any(file_src.endswith(tmp) for tmp in del_deny):
+                if 'IMAGESET' in root or 'IMAGESET' in file:
+                    continue
+
                 file_remove.append(file)
                 try:
                     send2trash(file_src)
@@ -201,7 +204,8 @@ def file_type(filename: str) -> int:
 
     if data:
         # print(data.group())
-        return 1
+        if len(filename) > 30:
+            return 1
     else:
         return 0
 
