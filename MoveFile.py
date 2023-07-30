@@ -77,8 +77,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 				if del_flag:
 					file_remove.append(file)
 					try:
-						# send2trash(file_src)
-						print('del')
+						send2trash(file_src)
 					except Exception as e:
 						logging.info(e)
 						os.remove(file_src)
@@ -106,7 +105,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 					#     'd:/Data/User/Python/Practice/source/download-complete.wav')
 				except Exception as e:
 					logging.info(f'\n\n{e}')
-				# os.remove(os.path.join(file, file_des))
+					os.remove(os.path.join(file, file_des))
 				print('\r', end='')
 				print(120 * ' ', end='')
 				print('\r', end='', flush=True)
@@ -191,7 +190,7 @@ def remove_null_dirs(origin_dir: str) -> None:
 				send2trash(dir_path)
 				file_remove.append('.\\' + dir_path.split('\\')
 								   [-2] + '\\' + dir_path.split('\\')[-1])
-	# file_remove.append(dir_path.split('\\')[-1])
+	#file_remove.append(dir_path.split('\\')[-1])
 	my_print(file_remove, 'is send2trash')
 
 
