@@ -12,12 +12,13 @@ import logging
 import argparse
 from shutil import move
 from send2trash import send2trash
+
 # from playsound import playsound
 
 # logging.disable(logging.INFO)
 # logging.disable(logging.DEBUG)
 logging.basicConfig(level=logging.INFO,
-					format=" %(asctime)s - %(levelname)s - %(message)s")
+                    format=" %(asctime)s - %(levelname)s - %(message)s")
 
 file_remove = []
 count = 0
@@ -41,7 +42,7 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 	file_moved = []
 	file_exists = []
 	file_remove = []
-	del_deny = ('fanart','poster','landscape','.tmp', '.mkv','.nfo','poster','landscape')
+	del_deny = ('fanart', 'poster', 'landscape', '.tmp', '.mkv', '.nfo', 'poster', 'landscape')
 
 	for root, dirs, files in os.walk(origin):
 		for file in files:
@@ -99,10 +100,10 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 						open_player(file_src)
 					move(file_src, file_des)
 					file_moved.append(file_src.split(
-						'\\')[-1] + ' is moved to ' + des_split)
+							'\\')[-1] + ' is moved to ' + des_split)
 					rename_file(file_des)
-					# playsound(
-					#     'd:/Data/User/Python/Practice/source/download-complete.wav')
+				# playsound(
+				#     'd:/Data/User/Python/Practice/source/download-complete.wav')
 				except Exception as e:
 					logging.info(f'\n\n{e}')
 					os.remove(os.path.join(file, file_des))
@@ -127,7 +128,7 @@ def rename_file(file: str) -> str:
 	"""
 	pattern1 = ['_', '-']
 	pattern2 = ['1.', '2.', '3.', '4.', 'A.', 'B.',
-				'C.', 'D.', 'E.', 'a.', 'b.', 'c.', 'd.', 'e.']
+	            'C.', 'D.', 'E.', 'a.', 'b.', 'c.', 'd.', 'e.']
 	number = {
 		'A.': '1.',
 		'B.': '2.',
@@ -154,7 +155,7 @@ def rename_file(file: str) -> str:
 				if pat2 in number:
 					result = result.replace(pat2, number[pat2])
 
-				len_part = len(pattern)-1
+				len_part = len(pattern) - 1
 				temp_name = file_sname[:-len_part]
 				des_path = os.path.join(file_path, temp_name)
 				if not os.path.exists(des_path):
@@ -163,7 +164,7 @@ def rename_file(file: str) -> str:
 				des = os.path.join(des_path, result)
 				move(file, des)
 				print("{} renamed {}".format(
-					file.split('\\')[-1], result.split('\\')[-1]))
+						file.split('\\')[-1], result.split('\\')[-1]))
 				break
 
 	return result
@@ -189,8 +190,8 @@ def remove_null_dirs(origin_dir: str) -> None:
 				# os.removedirs(dir_path)
 				send2trash(dir_path)
 				file_remove.append('.\\' + dir_path.split('\\')
-								   [-2] + '\\' + dir_path.split('\\')[-1])
-	#file_remove.append(dir_path.split('\\')[-1])
+				[-2] + '\\' + dir_path.split('\\')[-1])
+	# file_remove.append(dir_path.split('\\')[-1])
 	my_print(file_remove, 'is send2trash')
 
 
@@ -254,9 +255,9 @@ def run_period(origin_destination: str, destination: list, minutes: float, run_t
 
 	for i in range(run_time):
 		print(
-			f'\n{time.strftime("%b-%d %A %H:%M:%S")}  Running {i + 1} OpenPot:{OpenPot} Complet:{count}')
+				f'\n{time.strftime("%b-%d %A %H:%M:%S")}  Running {i + 1} OpenPot:{OpenPot} Complet:{count}')
 		move_file(origin_destination, destination,
-				  filetype=('.mp4', '.mkv', '.wmv', 'avi'))
+		          filetype=('.mp4', '.mkv', '.wmv', 'avi'))
 		remove_null_dirs(origin_destination)
 		time.sleep(int(minutes * 60))
 
@@ -281,7 +282,7 @@ def main():
 	src_dir = os.path.abspath(args.src_dir)
 	dest_dir = os.path.abspath(args.dest_dir)
 	dest_eu = os.path.abspath(args.dest_eu)
-	OpenPot  = args.openpot
+	OpenPot = args.openpot
 
 	file_end = ('.mp4', '.jpg', '.wmv', '.mov', '.mkv', 'avi')
 	dest_f = [dest_dir, dest_eu]
