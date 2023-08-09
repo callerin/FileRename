@@ -53,15 +53,8 @@ def move_file(origin: str, destination: list, filetype: tuple = ('.mp4', '.jpg',
 			if file.endswith('.aria2'):
 				continue
 
-			file_t = file_type(file)
-			try:
-				file_destination = destination[file_t]
-			except Exception as e:
-				logging.error(e)
-				continue
-
 			file_src = os.path.join(root, file)
-			file_des = os.path.join(file_destination, file_src.split('\\')[-1])
+			file_des = os.path.join(destination, file_src.split('\\')[-1])
 			try:
 				file_size = os.path.getsize(file_src) / (1024 * 1024)  # 返回 MB
 			except Exception as e:
@@ -195,28 +188,6 @@ def remove_null_dirs(origin_dir: str) -> None:
 	my_print(file_remove, 'is send2trash')
 
 
-def file_type(filename: str) -> int:
-	"""
-	判断文件名中是否存在特殊字符
-	Args:
-		filename:  文件名str
-
-	Returns:
-		0   eu
-		1   single
-
-	"""
-	pat = r'\d{2}\.\d{2}\.\d{2}|2160|1080'
-	data = re.search(pat, filename)
-
-	if data:
-		# print(data.group())
-		if len(filename) > 30:
-			return 1
-	else:
-		return 0
-
-
 def my_print(files: list, ending: str):
 	"""
 	按照固定格式打印文件列表
@@ -272,7 +243,6 @@ def main():
 	parser = argparse.ArgumentParser(description='Organize video files.')
 	parser.add_argument('-o', '--src_dir', type=str, default='./', help='Source directory.')
 	parser.add_argument('-d', '--dest_dir', type=str, default='./', help='Destination directory.')
-	parser.add_argument('-u', '--dest_eu', type=str, default='./', help='Destination directory EU.')
 	parser.add_argument('-p', '--openpot', type=bool, default=False, help='Open Potplayer.')
 
 	args = parser.parse_args()
@@ -281,17 +251,15 @@ def main():
 
 	src_dir = os.path.abspath(args.src_dir)
 	dest_dir = os.path.abspath(args.dest_dir)
-	dest_eu = os.path.abspath(args.dest_eu)
 	OpenPot = args.openpot
 
 	file_end = ('.mp4', '.jpg', '.wmv', '.mov', '.mkv', 'avi')
-	dest_f = [dest_dir, dest_eu]
 
 	print(time.strftime("%b-%d %A %H:%M:%S") + '\n')
 
 	print(f"OpenPot:{OpenPot}")
 
-	run_period(src_dir, dest_f, 0.1, 10000)
+	run_period(src_dir, dest_dir, 0.1, 10000)
 	print('\nMoved {0} files\n'.format(count))
 
 
