@@ -45,7 +45,6 @@ def move_file(origin: str, destination: list, filetype: tuple = (
     file_remove = []
     del_deny = ('fanart', 'poster', 'landscape', '.tmp',
                 '.mkv', '.nfo', 'poster', 'landscape')
-    del_key = ('小视频','.html','獲 取','社 區','uur9 3')
 
     for root, dirs, files in os.walk(origin):
         for file in files:
@@ -64,12 +63,9 @@ def move_file(origin: str, destination: list, filetype: tuple = (
                 logging.error(f'get file size error {e}')
 
             if send_trash and file_size < MinSize:
-                del_flag = False
+                del_flag = True
                 if 'IMAGESET' in root or 'IMAGESET' in file :
                     continue
-
-                if any( arg in file for arg in del_key):
-                    del_flag = True
 
                 for arg in del_deny:
                     if arg in file_src:
@@ -155,7 +151,7 @@ def rename_file(file: str) -> str:
         for pat2 in pattern2:
             pattern = pat1 + pat2
             if pattern in file_name:
-                series = pattern.replace(pat1, '.CD')
+                series = pattern.replace(pat1, '-CD')
                 result = file_name.replace(pattern, series)
                 if pat2 in number:
                     result = result.replace(pat2, number[pat2])
@@ -272,7 +268,7 @@ def main():
 
     print(f"OpenPot:{OpenPot}")
 
-    run_period(src_dir, dest_dir, 0.1, 10000)
+    run_period(src_dir, dest_dir, 0.3, 10000)
     print('\nMoved {0} files\n'.format(count))
 
 
