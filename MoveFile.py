@@ -78,7 +78,7 @@ def move_file(origin: str, destination: list, filetype: tuple = (
                         send2trash(file_src)
                     except Exception as e:
                         logging.info(e)
-                        os.remove(file_src)
+                        #os.remove(file_src)
                     continue
 
             if file_src.endswith(filetype):
@@ -239,7 +239,7 @@ def run_period(origin_destination: str, destination: list,
         move_file(origin_destination, destination,
                   filetype=('.mp4', '.mkv', '.wmv', 'avi'))
         remove_null_dirs(origin_destination)
-        time.sleep(int(minutes * 60))
+        time.sleep(int(minutes))
 
 
 def open_player(filepath: str):
@@ -268,7 +268,7 @@ def main():
 
     print(f"OpenPot:{OpenPot}")
 
-    run_period(src_dir, dest_dir, 0.3, 10000)
+    run_period(src_dir, dest_dir, 5, 10000)
     print('\nMoved {0} files\n'.format(count))
 
 
