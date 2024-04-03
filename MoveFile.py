@@ -25,7 +25,7 @@ count = 0
 MinSize = 300
 
 
-def move_file(origin: str, destination: list, filetype: tuple = (
+def move_file(origin: str, destination: str, filetype: tuple = (
         '.mp4', '.jpg', '.nfo', '.MP4'), send_trash=True):
     """
     移动文件夹下所有符合要求的文件到另一文件夹
@@ -43,10 +43,35 @@ def move_file(origin: str, destination: list, filetype: tuple = (
     file_moved = []
     file_exists = []
     file_remove = []
-    del_deny = ('fanart', 'poster', 'landscape', '.tmp',
-                '.mkv', '.nfo', 'poster', 'landscape')
+    del_deny = ('fanart', 'poster', 'landscape', '.tmp','.dat',
+                '.mkv', 'poster', 'landscape')
+
+    del_keys = ('强 力 推 荐','社区','直播','高速連接','.url','.html')
+    del_flag = False
+
+	#flag_nfo = True
+	#name_movie = ''
+	#for root, dirs, files in os.walk(file_path):
+	#	nfo_list = []
+	#	temp_nfo = {}
+	#	file_list = []
+	#	image_list = []
+	#	movie_list = []
+
+	#	for file in files:
+	#		# delete files
+	#		if any(arg in file for arg in del_keys):
+	#			try:
+	#				send2trash(os.path.join(root,file))
+	#				logging.info(f'deleted {file}')
+	#				if file.endswith(file_end):
+	#					print(f'deleted {file}')
+	#			except Exception as e:
+	#				logging.error(f'delete file error\n{e}')
 
     for root, dirs, files in os.walk(origin):
+        if 'Trash' in root:
+            continue
         for file in files:
             if file + '.aria2' in files:
                 file_downloading.append(file)
@@ -56,34 +81,37 @@ def move_file(origin: str, destination: list, filetype: tuple = (
                 continue
 
             file_src = os.path.join(root, file)
-            file_des = os.path.join(destination, file_src.split('\\')[-1])
+            file_des = os.path.join(destination, os.path.split(file_src)[-1])
+
             try:
                 file_size = os.path.getsize(file_src) / (1024 * 1024)  # 返回 MB
+                if send_trash and file_size < MinSize:
+                    del_flag = True
+                    if 'IMAGESET' in root or 'IMAGESET' in file :
+                        continue
+                    for arg in del_deny:
+                        if arg in file_src:
+                            del_flag = False
+                            break
             except Exception as e:
                 logging.error(f'get file size error {e}')
 
-            if send_trash and file_size < MinSize:
+            if any(arg in file for arg in del_keys):
                 del_flag = True
-                if 'IMAGESET' in root or 'IMAGESET' in file :
-                    continue
 
-                for arg in del_deny:
-                    if arg in file_src:
-                        del_flag = False
-                        break
-
-                if del_flag:
-                    file_remove.append(file)
-                    try:
-                        send2trash(file_src)
-                    except Exception as e:
-                        logging.info(e)
-                        #os.remove(file_src)
-                    continue
+            if del_flag:
+                file_remove.append(file)
+                try:
+                    send2trash(file_src)
+                except Exception as e:
+                    logging.info(e)
+                    #os.remove(file_src)
+                continue
 
             if file_src.endswith(filetype):
                 if os.path.exists(file_des):
                     file_exists.append(file_des)
+                    print(file_des)
                     continue
 
                 des_split = destination.split('\\')[-1]
@@ -190,8 +218,7 @@ def remove_null_dirs(origin_dir: str) -> None:
             if len(allfiles) == 0:
                 # os.removedirs(dir_path)
                 send2trash(dir_path)
-                file_remove.append('.\\' + dir_path.split('\\')
-                                   [-2] + '\\' + dir_path.split('\\')[-1])
+                file_remove.append('.\\' + dir_path.split('\\')[-1])
     # file_remove.append(dir_path.split('\\')[-1])
     my_print(file_remove, 'is send2trash')
 
@@ -219,7 +246,7 @@ def write_change(moved: dict):
     pass
 
 
-def run_period(origin_destination: str, destination: list,
+def run_period(origin_destination: str, destination: str,
                minutes: float, run_time: int) -> None:
     """
 
